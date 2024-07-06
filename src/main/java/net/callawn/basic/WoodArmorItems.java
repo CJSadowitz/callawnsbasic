@@ -48,13 +48,13 @@ public class WoodArmorItems {
                     }
                     if (comma_counter == 0) {
                         armorType.append(line.charAt(i));
-                    } else if (comma_counter == 1 && line.charAt(i) >= 'a' && line.charAt(i) <= 'z') {
+                    } else if (comma_counter == 1 && (line.charAt(i) >= 'a' && line.charAt(i) <= 'z' || line.charAt(i) == '_')) {
                         nameSpace.append(line.charAt(i));
-                    } else if (comma_counter == 2 && line.charAt(i) >= 'a' && line.charAt(i) <= 'z') {
+                    } else if (comma_counter == 2 && (line.charAt(i) >= 'a' && line.charAt(i) <= 'z' || line.charAt(i) == '_')) {
                         material.append(line.charAt(i));
-                    } else if (comma_counter == 3 && line.charAt(i) >= 'a' && line.charAt(i) <= 'z') {
+                    } else if (comma_counter == 3) {
                         group.append(line.charAt(i));
-                    } else if (comma_counter == 4 && line.charAt(i) >= 'a' && line.charAt(i) <= 'z') {
+                    } else if (comma_counter == 4 && (line.charAt(i) >= 'a' && line.charAt(i) <= 'z' || line.charAt(i) == '_')) {
                         ingredient.append(line.charAt(i));
                     }
                 }
@@ -66,37 +66,57 @@ public class WoodArmorItems {
             }
         }
         catch (IOException error) {
-            System.out.println("File reader error ARMORMATERIALS.CSV, " + error);
+            System.out.println("File reader error armoritems.csv, " + error);
         }
     }
 
     public static void register() {
         // Always be an item. Need to register four items per name: boots, chestplate, helmet, leggings
         for (int i = 0; i < names.size(); i++) {
-            String itemName = names.get(i) + "_boots";
             String nameSpace = nameSpaces.get(i);
-            Registry<ArmorMaterial> armorMaterialRegistry = Registries.ARMOR_MATERIAL;
-            ArmorMaterial customMaterial = armorMaterialRegistry.get(Identifier.of(nameSpaces.get(i), materials.get(i)));
-            RegistryEntry<ArmorMaterial> customMaterialEntry = Registry.registerReference(armorMaterialRegistry,
-                    Identifier.of(nameSpaces.get(i), materials.get(i)), customMaterial);
+            RegistryEntry<ArmorMaterial> theArmorMaterial = WoodArmorMaterials.finalArmorMaterials.get(i);
             for(int j = 0; j < 4; j++) {
                 if (j == 0) {
+                    String itemName = names.get(i) + "_boots";
                     // Make and register item at the same time
-                    Registry.register(Registries.ITEM,
-                            Identifier.of(nameSpace, itemName),
-                            new ArmorItem(customMaterialEntry, ArmorItem.Type.BOOTS, new Item.Settings()));
+                    try {
+                        Registry.register(Registries.ITEM,
+                                Identifier.of(nameSpace, itemName),
+                                new ArmorItem(theArmorMaterial, ArmorItem.Type.BOOTS, new Item.Settings()));
+                    }
+                    catch (NullPointerException error) {
+                        System.out.println("WoodArmoritems: register: nullptr error: " + error);
+                    }
                 }else if (j == 1) {
-                    Registry.register(Registries.ITEM,
-                            Identifier.of(nameSpace, itemName),
-                            new ArmorItem(customMaterialEntry, ArmorItem.Type.LEGGINGS, new Item.Settings()));
+                    String itemName = names.get(i) + "_leggings";
+                    try {
+                        Registry.register(Registries.ITEM,
+                                Identifier.of(nameSpace, itemName),
+                                new ArmorItem(theArmorMaterial, ArmorItem.Type.LEGGINGS, new Item.Settings()));
+                    }
+                    catch (NullPointerException error) {
+                        System.out.println("WoodArmoritems: register: nullptr error: " + error);
+                    }
                 }else if (j == 2) {
-                    Registry.register(Registries.ITEM,
-                            Identifier.of(nameSpace, itemName),
-                            new ArmorItem(customMaterialEntry, ArmorItem.Type.CHESTPLATE, new Item.Settings()));
+                    String itemName = names.get(i) + "_chestplate";
+                    try {
+                        Registry.register(Registries.ITEM,
+                                Identifier.of(nameSpace, itemName),
+                                new ArmorItem(theArmorMaterial, ArmorItem.Type.CHESTPLATE, new Item.Settings()));
+                    }
+                    catch (NullPointerException error) {
+                        System.out.println("WoodArmoritems: register: nullptr error: " + error);
+                    }
                 }else {
-                    Registry.register(Registries.ITEM,
-                            Identifier.of(nameSpace, itemName),
-                            new ArmorItem(customMaterialEntry, ArmorItem.Type.HELMET, new Item.Settings()));
+                    String itemName = names.get(i) + "_helmet";
+                    try {
+                        Registry.register(Registries.ITEM,
+                              Identifier.of(nameSpace, itemName),
+                              new ArmorItem(theArmorMaterial, ArmorItem.Type.HELMET, new Item.Settings()));
+                    }
+                    catch (NullPointerException error) {
+                        System.out.println("WoodArmoritems: register: nullptr error: " + error);
+                    }
                 }
             }
         }

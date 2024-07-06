@@ -1,8 +1,7 @@
 package net.callawn.basic;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
@@ -13,9 +12,13 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.Util;
+
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Supplier;
+
 
 public class WoodArmorMaterials {
     // Create the Armor Material with its parameters
@@ -28,10 +31,12 @@ public class WoodArmorMaterials {
     static ArrayList<String> ingredient = new ArrayList<>();
     static ArrayList<String> namespace = new ArrayList<>();
 
+    static ArrayList<RegistryEntry<ArmorMaterial>> finalArmorMaterials = new ArrayList<>();
+
     public static void getMaterials(String path) {
         // Get and register materials from csv
         try {
-            BufferedReader file = new BufferedReader(new FileReader(path));
+            BufferedReader file = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8));
             String line;
             int line_counter = 0;
             while ((line = file.readLine()) != null) {
@@ -42,18 +47,18 @@ public class WoodArmorMaterials {
                     continue;
                 }
                 int comma_counter = 0;
-                StringBuilder material = new StringBuilder();
-                StringBuilder armor_one = new StringBuilder();
-                StringBuilder armor_two = new StringBuilder();
-                StringBuilder armor_three = new StringBuilder();
-                StringBuilder armor_four = new StringBuilder();
-                StringBuilder armor_five = new StringBuilder();
-                StringBuilder enchant_str = new StringBuilder();
-                StringBuilder sound_str = new StringBuilder();
-                StringBuilder toughness_str = new StringBuilder();
-                StringBuilder knock_str = new StringBuilder();
-                StringBuilder ingredient_str = new StringBuilder();
-                StringBuilder namespace_str = new StringBuilder();
+                StringBuilder material = new StringBuilder(100);
+                StringBuilder armor_one = new StringBuilder(100);
+                StringBuilder armor_two = new StringBuilder(100);
+                StringBuilder armor_three = new StringBuilder(100);
+                StringBuilder armor_four = new StringBuilder(100);
+                StringBuilder armor_five = new StringBuilder(100);
+                StringBuilder enchant_str = new StringBuilder(100);
+                StringBuilder sound_str = new StringBuilder(100);
+                StringBuilder toughness_str = new StringBuilder(100);
+                StringBuilder knock_str = new StringBuilder(100);
+                StringBuilder ingredient_str = new StringBuilder(100);
+                StringBuilder namespace_str = new StringBuilder(100);
 
                 for (int i = 0; i < line.length(); i++) {
                     if (line.charAt(i) == ',') {
@@ -76,32 +81,44 @@ public class WoodArmorMaterials {
                         }
                     } else if (comma_counter == 6 && line.charAt(i) >= '0' && line.charAt(i) <= '9') {
                         enchant_str.append(line.charAt(i));
-                    } else if (comma_counter == 7 && line.charAt(i) >= 'a' && line.charAt(i) <= 'z') {
+                    } else if (comma_counter == 7 && (line.charAt(i) >= 'a' && line.charAt(i) <= 'z' || line.charAt(i) == '_')) {
                         sound_str.append(line.charAt(i));
                     } else if (comma_counter == 8 && line.charAt(i) >= '0' && line.charAt(i) <= '9') {
                         toughness_str.append(line.charAt(i));
                     } else if (comma_counter == 9 && line.charAt(i) >= '0' && line.charAt(i) <= '9') {
                         knock_str.append(line.charAt(i));
-                    } else if (comma_counter == 10 && line.charAt(i) >= 'a' && line.charAt(i) <= 'z') {
+                    } else if (comma_counter == 10 && (line.charAt(i) >= 'a' && line.charAt(i) <= 'z' || line.charAt(i) == '_')) {
                         ingredient_str.append(line.charAt(i));
-                    } else if (comma_counter == 11 && line.charAt(i) >= 'a' && line.charAt(i) <= 'z') {
+                    } else if (comma_counter == 11 && (line.charAt(i) >= 'a' && line.charAt(i) <= 'z' || line.charAt(i) == '_')) {
                         namespace_str.append(line.charAt(i));
                     }
                 }
-                materials.add(material.toString());
                 // Change the armor_strings into integers
-                armor.add(Integer.parseInt(armor_one.toString()));
-                armor.add(Integer.parseInt(armor_two.toString()));
-                armor.add(Integer.parseInt(armor_three.toString()));
-                armor.add(Integer.parseInt(armor_four.toString()));
-                armor.add(Integer.parseInt(armor_five.toString()));
-                enchantability.add(Integer.parseInt(enchant_str.toString()));
-                equipSound.add(sound_str.toString());
-                toughness.add(Float.parseFloat(toughness_str.toString()));
-                knock_back.add(Float.parseFloat(knock_str.toString()));
-                ingredient.add(ingredient_str.toString());
-                namespace.add(namespace_str.toString());
+                try {
+                    materials.add(material.toString());
+                    armor.add(Integer.parseInt(armor_one.toString()));
+                    armor.add(Integer.parseInt(armor_two.toString()));
+                    armor.add(Integer.parseInt(armor_three.toString()));
+                    armor.add(Integer.parseInt(armor_four.toString()));
+                    armor.add(Integer.parseInt(armor_five.toString()));
+                    toughness.add(Float.parseFloat(toughness_str.toString()));
+                    knock_back.add(Float.parseFloat(knock_str.toString()));
+                    enchantability.add(Integer.parseInt(enchant_str.toString()));
+                    equipSound.add(sound_str.toString());
+                    ingredient.add(ingredient_str.toString());
+                    namespace.add(namespace_str.toString());
+                }
+                catch (NumberFormatException error) {
+                    System.out.println("WoodArmorMaterials: getMaterials: Data parse error: " + error);
+                }
+                catch (NullPointerException error) {
+                    System.out.println("WoodArmorMaterials: getMaterials: Nullptr error: " + error);
+                }
+                catch (InvalidIdentifierException error) {
+                    System.out.println("WoodArmorMaterials: getMaterials: Wrong Character " + error);
+                }
             }
+            file.close();
         } catch (IOException error) {
             System.out.println("File reader error ARMORMATERIALS.CSV, " + error);
         }
@@ -124,7 +141,7 @@ public class WoodArmorMaterials {
             int enchant = enchantability.get(i);
             RegistryEntry<SoundEvent> equip = getSound(equipSound.get(i));
 
-            String itemName = "minecraft:" + ingredient.get(i);
+            String itemName = ingredient.get(i);
             // Find the correct item for the ingredient
             Registry<Item> itemRegistry = Registries.ITEM;
             Item item = itemRegistry.get(Identifier.of(namespace.get(i), itemName));
@@ -135,7 +152,8 @@ public class WoodArmorMaterials {
             String name_space = namespace.get(i);
             try
             {
-                register_material(id, armorMap, enchant, equip, tough, knock, repairIngredient, List.of(new ArmorMaterial.Layer(Identifier.of(name_space, id))));
+                finalArmorMaterials.add(register_material(id, armorMap, enchant, equip, tough, knock, repairIngredient,
+                        List.of(new ArmorMaterial.Layer(Identifier.of(name_space, id)))));
             }
             finally
             {
@@ -160,7 +178,7 @@ public class WoodArmorMaterials {
         return SoundEvents.AMBIENT_CAVE;
     }
 
-    private static void register_material(
+    private static RegistryEntry<ArmorMaterial> register_material(
             String id,
             EnumMap<ArmorItem.Type, Integer> defense,
             int enchantability,
@@ -176,7 +194,7 @@ public class WoodArmorMaterials {
             enumMap.put(type, defense.get(type));
         }
 
-        Registry.registerReference(
+        return Registry.registerReference(
                 Registries.ARMOR_MATERIAL,
                 Identifier.ofVanilla(id),
                 new ArmorMaterial(enumMap, enchantability, equipSound, repairIngredient, layers, toughness, knockbackResistance)
