@@ -1,10 +1,8 @@
-package net.callawn.basic.woodarmormaterials;
+package net.callawn.basic;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
-
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
@@ -16,14 +14,11 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-
 import java.util.*;
 import java.util.function.Supplier;
 
-
 public class WoodArmorMaterials {
     // Create the Armor Material with its parameters
-    // Register the OAK material
     static ArrayList<String> materials = new ArrayList<>();
     static ArrayList<Integer> armor = new ArrayList<>();
     static ArrayList<Integer> enchantability = new ArrayList<>();
@@ -32,14 +27,20 @@ public class WoodArmorMaterials {
     static ArrayList<Float> knock_back = new ArrayList<>();
     static ArrayList<String> ingredient = new ArrayList<>();
     static ArrayList<String> namespace = new ArrayList<>();
-    public static void getMaterials(String path) {
-        // List of all material information from CSV file
 
+    public static void getMaterials(String path) {
         // Get and register materials from csv
         try {
             BufferedReader file = new BufferedReader(new FileReader(path));
             String line;
+            int line_counter = 0;
             while ((line = file.readLine()) != null) {
+                if (line_counter == 0)
+                {
+                    // skip the first line describing the csv file
+                    line_counter++;
+                    continue;
+                }
                 int comma_counter = 0;
                 StringBuilder material = new StringBuilder();
                 StringBuilder armor_one = new StringBuilder();
@@ -100,7 +101,6 @@ public class WoodArmorMaterials {
                 knock_back.add(Float.parseFloat(knock_str.toString()));
                 ingredient.add(ingredient_str.toString());
                 namespace.add(namespace_str.toString());
-
             }
         } catch (IOException error) {
             System.out.println("File reader error ARMORMATERIALS.CSV, " + error);
@@ -125,8 +125,9 @@ public class WoodArmorMaterials {
             RegistryEntry<SoundEvent> equip = getSound(equipSound.get(i));
 
             String itemName = "minecraft:" + ingredient.get(i);
+            // Find the correct item for the ingredient
             Registry<Item> itemRegistry = Registries.ITEM;
-            Item item = itemRegistry.get(Identifier.of(itemName));
+            Item item = itemRegistry.get(Identifier.of(namespace.get(i), itemName));
             Supplier<Ingredient> repairIngredient = () -> Ingredient.ofItems(item);
             
             float tough = toughness.get(i);
@@ -143,29 +144,19 @@ public class WoodArmorMaterials {
         }
     }
 
-    public static RegistryEntry<SoundEvent> getSound(String input)
+    private static RegistryEntry<SoundEvent> getSound(String input)
     {
-        if (Objects.equals(input, "leather"))
-        {
+        if (Objects.equals(input, "leather")) {
             return SoundEvents.ITEM_ARMOR_EQUIP_LEATHER;
-        }
-        else if (Objects.equals(input, "iron"))
-        {
+        } else if (Objects.equals(input, "iron")) {
             return SoundEvents.ITEM_ARMOR_EQUIP_IRON;
-        }
-        else if (Objects.equals(input, "chain"))
-        {
+        } else if (Objects.equals(input, "chain")) {
             return SoundEvents.ITEM_ARMOR_EQUIP_CHAIN;
-        }
-        else if (Objects.equals(input, "gold"))
-        {
+        } else if (Objects.equals(input, "gold")) {
             return SoundEvents.ITEM_ARMOR_EQUIP_GOLD;
-        }
-        else if (Objects.equals(input, "diamond"))
-        {
+        } else if (Objects.equals(input, "diamond")) {
             return SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND;
         }
-        // lol
         return SoundEvents.AMBIENT_CAVE;
     }
 
