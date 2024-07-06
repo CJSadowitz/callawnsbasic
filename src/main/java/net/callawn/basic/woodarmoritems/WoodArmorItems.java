@@ -13,6 +13,9 @@ import net.minecraft.util.Identifier;
 
 public class WoodArmorItems {
 
+    WoodArmorMaterials.getMaterials("armormaterials.csv");
+
+
 
     // Generate the material
     public static final Item OAK_BOOTS = new ArmorItem(WoodArmorMaterials.OAK_MATERIAL, ArmorItem.Type.BOOTS, new Item.Settings());

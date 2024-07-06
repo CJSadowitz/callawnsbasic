@@ -8,7 +8,6 @@ import java.io.IOException;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -18,30 +17,27 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Supplier;
 
 
 public class WoodArmorMaterials {
     // Create the Armor Material with its parameters
     // Register the OAK material
-    static ArrayList<String> materials = new ArrayList<String>();
-    static ArrayList<Integer> armor = new ArrayList<Integer>();
-    static ArrayList<Integer> enchantability = new ArrayList<Integer>();
-    static ArrayList<String> equipSound = new ArrayList<String>();
-    static ArrayList<Float> toughness = new ArrayList<Float>();
-    static ArrayList<Float> knock_back = new ArrayList<Float>();
-    static ArrayList<String> ingredient = new ArrayList<String>();
-    static ArrayList<String> namespace = new ArrayList<String>();
-    public static void getMaterials(String[] path) {
+    static ArrayList<String> materials = new ArrayList<>();
+    static ArrayList<Integer> armor = new ArrayList<>();
+    static ArrayList<Integer> enchantability = new ArrayList<>();
+    static ArrayList<String> equipSound = new ArrayList<>();
+    static ArrayList<Float> toughness = new ArrayList<>();
+    static ArrayList<Float> knock_back = new ArrayList<>();
+    static ArrayList<String> ingredient = new ArrayList<>();
+    static ArrayList<String> namespace = new ArrayList<>();
+    public static void getMaterials(String path) {
         // List of all material information from CSV file
 
         // Get and register materials from csv
         try {
-            BufferedReader file = new BufferedReader(new FileReader("armormaterials.csv"));
+            BufferedReader file = new BufferedReader(new FileReader(path));
             String line;
             while ((line = file.readLine()) != null) {
                 int comma_counter = 0;
@@ -112,7 +108,6 @@ public class WoodArmorMaterials {
     }
     public static void register_all_materials()
     {
-
         // Iterate through the list and register every item
         for (int i = 0; i < toughness.size(); i++)
         {
@@ -127,72 +122,53 @@ public class WoodArmorMaterials {
                 map.put(ArmorItem.Type.BODY, armor.get(finalI + 4));
             });
             int enchant = enchantability.get(i);
-            RegistryEntry<SoundEvent> equip = null;
-            if (Objects.equals(equipSound.get(i), "leather"))
-            {
-                equip = SoundEvents.ITEM_ARMOR_EQUIP_LEATHER;
-            }
-            else if (Objects.equals(equipSound.get(i), "iron"))
-            {
-                equip = SoundEvents.ITEM_ARMOR_EQUIP_IRON;
-            }
-            else if (Objects.equals(equipSound.get(i), "chain"))
-            {
-                equip = SoundEvents.ITEM_ARMOR_EQUIP_CHAIN;
-            }
-            else if (Objects.equals(equipSound.get(i), "gold"))
-            {
-                equip = SoundEvents.ITEM_ARMOR_EQUIP_GOLD;
-            }
-            else if (Objects.equals(equipSound.get(i), "diamond"))
-            {
-                equip = SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND;
-            }
-            Supplier<Ingredient> repairIngredient = null;
+            RegistryEntry<SoundEvent> equip = getSound(equipSound.get(i));
+
             String itemName = "minecraft:" + ingredient.get(i);
-            Identifier ingredient_id = Identifier.of(itemName);
-            Item item = Registry.registerReference(, ingredient_id);
-
-
+            Registry<Item> itemRegistry = Registries.ITEM;
+            Item item = itemRegistry.get(Identifier.of(itemName));
+            Supplier<Ingredient> repairIngredient = () -> Ingredient.ofItems(item);
+            
             float tough = toughness.get(i);
             float knock = knock_back.get(i);
             String name_space = namespace.get(i);
             try
             {
-                register_material(id, armorMap, enchant, equip, tough, knock, ingredients, List.of(new ArmorMaterial.Layer(Identifier.of(name_space, id))));
+                register_material(id, armorMap, enchant, equip, tough, knock, repairIngredient, List.of(new ArmorMaterial.Layer(Identifier.of(name_space, id))));
             }
-            catch (IOException error)
+            finally
             {
-                System.out.println("Registration Error, " + error);
+                System.out.println("Successful registration");
             }
-
-
         }
-
     }
 
+    public static RegistryEntry<SoundEvent> getSound(String input)
+    {
+        if (Objects.equals(input, "leather"))
+        {
+            return SoundEvents.ITEM_ARMOR_EQUIP_LEATHER;
+        }
+        else if (Objects.equals(input, "iron"))
+        {
+            return SoundEvents.ITEM_ARMOR_EQUIP_IRON;
+        }
+        else if (Objects.equals(input, "chain"))
+        {
+            return SoundEvents.ITEM_ARMOR_EQUIP_CHAIN;
+        }
+        else if (Objects.equals(input, "gold"))
+        {
+            return SoundEvents.ITEM_ARMOR_EQUIP_GOLD;
+        }
+        else if (Objects.equals(input, "diamond"))
+        {
+            return SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND;
+        }
+        // lol
+        return SoundEvents.AMBIENT_CAVE;
+    }
 
-//    public static final RegistryEntry<ArmorMaterial> OAK_MATERIAL = register_material(
-//            "oak_material",
-//            Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
-//                map.put(ArmorItem.Type.BOOTS, 1);
-//                map.put(ArmorItem.Type.LEGGINGS, 1);
-//                map.put(ArmorItem.Type.CHESTPLATE, 2);
-//                map.put(ArmorItem.Type.HELMET, 1);
-//                map.put(ArmorItem.Type.BODY, 2);
-//            }),
-//            15,
-//            SoundEvents.ITEM_ARMOR_EQUIP_LEATHER,
-//            0.0F,
-//            0.0F,
-//            () -> Ingredient.ofItems(Items.STRIPPED_OAK_LOG),
-//            List.of(new ArmorMaterial.Layer(Identifier.of("callawnsbasic", "oak_material")))
-//    );
-
-
-
-
-    // Does the heavy lifting for me
     private static void register_material(
             String id,
             EnumMap<ArmorItem.Type, Integer> defense,
