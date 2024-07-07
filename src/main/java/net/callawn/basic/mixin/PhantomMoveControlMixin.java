@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(targets="net/minecraft/entity/mob/PhantomEntity")
 public abstract class PhantomMoveControlMixin {
 
-
+    // This is not the desired behavior. I would like to see a circle and swoop on the light sources not attacking players
     @Inject(method = "tickMovement", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
         PhantomEntity phantom = (PhantomEntity)(Object)this;
@@ -48,7 +48,7 @@ public abstract class PhantomMoveControlMixin {
         }
         if (nearestLightSource != null) {
             phantom.getMoveControl().moveTo(nearestLightSource.getX(), nearestLightSource.getY(),
-                    nearestLightSource.getZ(), 1.0);
+                    nearestLightSource.getZ(), 3.0);
             if (phantomLocation.isWithinDistance(nearestLightSource, 2.0)) {
                 world.breakBlock(nearestLightSource, true);
             }

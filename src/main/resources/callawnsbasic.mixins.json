@@ -5,7 +5,8 @@
 	"mixins": [
 		"ExampleMixin",
 		"PhantomMoveControlMixin",
-		"FindTargetGoalMixin"
+		"FindTargetGoalMixin",
+		"BedResetTimeMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
