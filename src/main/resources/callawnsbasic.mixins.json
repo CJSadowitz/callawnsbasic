@@ -3,7 +3,9 @@
 	"package": "net.callawn.basic.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"ExampleMixin",
+		"PhantomMoveControlMixin",
+		"FindTargetGoalMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
