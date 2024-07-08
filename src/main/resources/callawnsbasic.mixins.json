@@ -6,7 +6,11 @@
 		"ExampleMixin",
 		"PhantomMoveControlMixin",
 		"FindTargetGoalMixin",
-		"BedResetTimeMixin"
+		"BedResetTimeMixin",
+		"IncreaseMobDifficulty",
+		"IncreaseArmorQuality",
+		"SpiderBuff",
+		"SpiderPotionEffects"
 	],
 	"injectors": {
 		"defaultRequire": 1
