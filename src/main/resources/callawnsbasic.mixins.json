@@ -3,14 +3,20 @@
 	"package": "net.callawn.basic.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin",
-		"PhantomMoveControlMixin",
-		"FindTargetGoalMixin",
 		"BedResetTimeMixin",
+		"ChangeAmbientOcclusion",
+		"CreeperBuff",
+		"CreeperEntityInvoker",
+		"CreeperRangeBuff",
+		"ExampleMixin",
+		"FindTargetGoalMixin",
 		"IncreaseMobDifficulty",
-		"IncreaseArmorQuality",
+		"LivingEntityAccessors",
+		"MobBuffs",
+		"PhantomMoveControlMixin",
 		"SpiderBuff",
-		"SpiderPotionEffects"
+		"SpiderPotionEffects",
+		"ZombieBuff"
 	],
 	"injectors": {
 		"defaultRequire": 1

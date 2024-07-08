@@ -9,7 +9,6 @@ import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,27 +27,15 @@ public class SpiderBuff {
                                                  CallbackInfoReturnable<EntityData> cir){
 
         SpiderEntity spider = (SpiderEntity)(Object)this;
-        Random random = world.getRandom();
 
-        SkeletonEntity skeletonEntity = EntityType.SKELETON.create(spider.getWorld());
-        if (skeletonEntity != null) {
-            skeletonEntity.refreshPositionAndAngles(spider.getX(), spider.getY(), spider.getZ(), spider.getYaw(), 0.0F);
-            skeletonEntity.initialize(world, difficulty, spawnReason, null);
-            skeletonEntity.startRiding(spider);
-        }
-
-        if (entityData == null) {
-            entityData = new SpiderEntity.SpiderData();
-            ((SpiderEntity.SpiderData)entityData).setEffect(random);
-        }
-
-        if (entityData instanceof SpiderEntity.SpiderData spiderData) {
-            RegistryEntry<StatusEffect> registryEntry = spiderData.effect;
-            if (registryEntry != null) {
-                spider.addStatusEffect(new StatusEffectInstance(registryEntry, -1));
+        if (difficulty.getLocalDifficulty() >= 10) {
+            SkeletonEntity skeletonEntity = EntityType.SKELETON.create(spider.getWorld());
+            if (skeletonEntity != null) {
+                skeletonEntity.refreshPositionAndAngles(spider.getX(), spider.getY(), spider.getZ(), spider.getYaw(), 0.0F);
+                skeletonEntity.initialize(world, difficulty, spawnReason, null);
+                skeletonEntity.startRiding(spider);
             }
         }
-
         cir.setReturnValue(entityData);
     }
 }

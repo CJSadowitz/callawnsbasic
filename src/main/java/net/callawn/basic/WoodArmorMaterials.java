@@ -35,6 +35,7 @@ public class WoodArmorMaterials {
 
     public static void getMaterials(String path) {
         // Get and register materials from csv
+        System.out.println(System.getProperty("user.dir") + " ArmorMaterials Fun...");
         try {
             BufferedReader file = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8));
             String line;

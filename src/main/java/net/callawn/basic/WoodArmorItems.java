@@ -20,6 +20,7 @@ public class WoodArmorItems {
 
     private static void getArmorItems(String path)
     {
+        System.out.println(System.getProperty("user.dir") + " ArmorItems Fun...");
         try
         {
             BufferedReader file = new BufferedReader(new FileReader(path));

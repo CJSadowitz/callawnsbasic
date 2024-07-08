@@ -6,16 +6,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.minecraft.entity.mob.MobEntity.getEquipmentForSlot;
 
 @Mixin(targets="net/minecraft/entity/mob/MobEntity")
-public abstract class IncreaseArmorQuality {
+public abstract class MobBuffs {
 
     @Inject(method="initEquipment", at=@At("TAIL"))
     public void increase_quality(Random random, LocalDifficulty localDifficulty, CallbackInfo ci) {
@@ -36,5 +36,13 @@ public abstract class IncreaseArmorQuality {
                 }
             }
         }
+    }
+    @Inject(method="getLimitPerChunk", at=@At("RETURN"), cancellable = true)
+    public void increase_spawns_per_chunk(CallbackInfoReturnable<Integer> cir) {
+        cir.setReturnValue(40);
+    }
+    @Inject(method="canBeLeashed", at=@At("RETURN"), cancellable = true)
+    public void all_mobs_leashed(CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(true);
     }
 }
