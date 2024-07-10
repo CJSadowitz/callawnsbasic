@@ -4,7 +4,6 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"BedResetTimeMixin",
-		"ChangeAmbientOcclusion",
 		"CreeperBuff",
 		"CreeperEntityInvoker",
 		"CreeperRangeBuff",
@@ -13,7 +12,9 @@
 		"IncreaseMobDifficulty",
 		"LivingEntityAccessors",
 		"MobBuffs",
+		"MonsterSpawnChanges",
 		"PhantomMoveControlMixin",
+		"RemoveVillages",
 		"SpiderBuff",
 		"SpiderPotionEffects",
 		"ZombieBuff"

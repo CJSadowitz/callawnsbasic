@@ -39,7 +39,7 @@ public abstract class MobBuffs {
     }
     @Inject(method="getLimitPerChunk", at=@At("RETURN"), cancellable = true)
     public void increase_spawns_per_chunk(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(40);
+        cir.setReturnValue(20);
     }
     @Inject(method="canBeLeashed", at=@At("RETURN"), cancellable = true)
     public void all_mobs_leashed(CallbackInfoReturnable<Boolean> cir) {

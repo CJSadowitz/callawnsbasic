@@ -17,6 +17,9 @@ public class Callawnsbasic implements ModInitializer {
 			if (player.getStackInHand(hand).getItem() == Items.ANVIL) {
 				return ActionResult.FAIL;
 			}
+			if (player.getStackInHand(hand).getItem() == Items.ENDER_EYE) {
+				return ActionResult.FAIL;
+			}
 			return ActionResult.PASS;
 		});
 	}
