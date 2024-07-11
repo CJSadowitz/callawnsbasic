@@ -12,6 +12,7 @@ public class Callawnsbasic implements ModInitializer {
 		// fix paths
 		ArmorItems.generateItems("..\\src\\main\\java\\net\\callawn\\basic\\armormaterials.csv",
 				"..\\src\\main\\java\\net\\callawn\\basic\\armoritems.csv");
+		ModItems.generateItems("..\\src\\main\\java\\net\\callawn\\basic\\items.csv");
 		// Remove the placement of anvil
 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
 			if (player.getStackInHand(hand).getItem() == Items.ANVIL) {

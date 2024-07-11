@@ -1,9 +1,12 @@
 package net.callawn.basic;
 
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -20,7 +23,6 @@ public class ArmorItems {
 
     private static void getArmorItems(String path)
     {
-        System.out.println(System.getProperty("user.dir") + " ArmorItems Fun...");
         try
         {
             BufferedReader file = new BufferedReader(new FileReader(path));
@@ -72,6 +74,7 @@ public class ArmorItems {
     }
 
     public static void register() {
+        ArrayList<Item> everyItem = new ArrayList<>();
         // Always be an item. Need to register four items per name: boots, chestplate, helmet, leggings
         for (int i = 0; i < names.size(); i++) {
             String nameSpace = nameSpaces.get(i);
@@ -81,9 +84,9 @@ public class ArmorItems {
                     String itemName = names.get(i) + "_boots";
                     // Make and register item at the same time
                     try {
-                        Registry.register(Registries.ITEM,
+                        everyItem.add(Registry.register(Registries.ITEM,
                                 Identifier.of(nameSpace, itemName),
-                                new ArmorItem(theArmorMaterial, ArmorItem.Type.BOOTS, new Item.Settings()));
+                                new ArmorItem(theArmorMaterial, ArmorItem.Type.BOOTS, new Item.Settings())));
                     }
                     catch (NullPointerException error) {
                         System.out.println("WoodArmoritems: register: nullptr error: " + error);
@@ -91,9 +94,9 @@ public class ArmorItems {
                 }else if (j == 1) {
                     String itemName = names.get(i) + "_leggings";
                     try {
-                        Registry.register(Registries.ITEM,
+                        everyItem.add(Registry.register(Registries.ITEM,
                                 Identifier.of(nameSpace, itemName),
-                                new ArmorItem(theArmorMaterial, ArmorItem.Type.LEGGINGS, new Item.Settings()));
+                                new ArmorItem(theArmorMaterial, ArmorItem.Type.LEGGINGS, new Item.Settings())));
                     }
                     catch (NullPointerException error) {
                         System.out.println("WoodArmoritems: register: nullptr error: " + error);
@@ -101,9 +104,9 @@ public class ArmorItems {
                 }else if (j == 2) {
                     String itemName = names.get(i) + "_chestplate";
                     try {
-                        Registry.register(Registries.ITEM,
+                        everyItem.add(Registry.register(Registries.ITEM,
                                 Identifier.of(nameSpace, itemName),
-                                new ArmorItem(theArmorMaterial, ArmorItem.Type.CHESTPLATE, new Item.Settings()));
+                                new ArmorItem(theArmorMaterial, ArmorItem.Type.CHESTPLATE, new Item.Settings())));
                     }
                     catch (NullPointerException error) {
                         System.out.println("WoodArmoritems: register: nullptr error: " + error);
@@ -111,9 +114,9 @@ public class ArmorItems {
                 }else {
                     String itemName = names.get(i) + "_helmet";
                     try {
-                        Registry.register(Registries.ITEM,
+                        everyItem.add(Registry.register(Registries.ITEM,
                               Identifier.of(nameSpace, itemName),
-                              new ArmorItem(theArmorMaterial, ArmorItem.Type.HELMET, new Item.Settings()));
+                              new ArmorItem(theArmorMaterial, ArmorItem.Type.HELMET, new Item.Settings())));
                     }
                     catch (NullPointerException error) {
                         System.out.println("WoodArmoritems: register: nullptr error: " + error);
@@ -121,6 +124,17 @@ public class ArmorItems {
                 }
             }
         }
+        RegistryKey<ItemGroup> CUSTOM_ITEM_GROUP_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(), Identifier.of("callawnsbasic", "item_group"));
+        ItemGroup ARMOR_GROUP = FabricItemGroup.builder()
+                .icon(() -> new ItemStack(Items.DIAMOND))
+                .displayName(Text.translatable("itemGroup.callawnsarmor"))
+                .entries((context, entries) -> {
+                    for (Item item : everyItem) {
+                        entries.add(item);
+                    }
+                })
+                .build();
+        Registry.register(Registries.ITEM_GROUP, CUSTOM_ITEM_GROUP_KEY, ARMOR_GROUP);
     }
 
     public static void generateItems(String materials, String armorItems)
@@ -131,20 +145,4 @@ public class ArmorItems {
         getArmorItems(armorItems);
         register();
     }
-
-//    // Generate group location for all items
-//    public static final ItemGroup WOOD_ARMOR_GROUP = FabricItemGroup.builder()
-//            .icon(() -> new ItemStack(OAK_BOOTS))
-//            .displayName(Text.translatable("Callawn's Wood Armor"))
-//            .entries((context, entries) -> {
-//                entries.add(OAK_BOOTS);
-//            })
-//            .build();
-//
-//    public static void registerItems() {
-//        // register item group for all items to exist in
-//        Registry.register(Registries.ITEM_GROUP, Identifier.of("callawnsbasic", "wood_armor_group"), WOOD_ARMOR_GROUP);
-//
-//    }
-
 }

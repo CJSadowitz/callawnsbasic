@@ -57,5 +57,8 @@
   "item.callawnsbasic.chorus_boots": "Chorus Boots",
   "item.callawnsbasic.chorus_chestplate": "Chorus Chestplate",
   "item.callawnsbasic.chorus_leggings": "Chorus Leggings",
-  "item.callawnsbasic.chorus_helmet": "Chorus Helmet"
+  "item.callawnsbasic.chorus_helmet": "Chorus Helmet",
+
+  "item.callawnsbasic.test_item": "Test Item",
+  "itemGroup.callawnsarmor": "Callawn's Armor"
 }
