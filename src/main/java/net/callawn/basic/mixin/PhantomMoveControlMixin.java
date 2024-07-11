@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.random.RandomGenerator;
 
 
-@Mixin(targets="net/minecraft/entity/mob/PhantomEntity")
+@Mixin(value= PhantomEntity.class)
 public class PhantomMoveControlMixin {
 
     @Inject(method="tick", at=@At("HEAD"))
