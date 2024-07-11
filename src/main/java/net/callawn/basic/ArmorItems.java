@@ -1,16 +1,23 @@
 package net.callawn.basic;
 
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 
-public class WoodArmorItems {
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.stream.Stream;
+
+public class ArmorItems {
 
     static ArrayList<String> names = new ArrayList<>();
     static ArrayList<String> nameSpaces = new ArrayList<>();
@@ -18,11 +25,13 @@ public class WoodArmorItems {
     static ArrayList<String> groups = new ArrayList<>();
     static ArrayList<String> ingredients = new ArrayList<>();
 
-    private static void getArmorItems(String path)
+    static ArrayList<Item> everyItem = new ArrayList<>();
+
+    private static void getArmorItems(InputStream stream)
     {
         try
         {
-            BufferedReader file = new BufferedReader(new FileReader(path));
+            BufferedReader file = new BufferedReader(new InputStreamReader(stream));
             String line;
             int line_counter = 0;
 
@@ -71,18 +80,19 @@ public class WoodArmorItems {
     }
 
     public static void register() {
+
         // Always be an item. Need to register four items per name: boots, chestplate, helmet, leggings
         for (int i = 0; i < names.size(); i++) {
             String nameSpace = nameSpaces.get(i);
-            RegistryEntry<ArmorMaterial> theArmorMaterial = WoodArmorMaterials.finalArmorMaterials.get(i);
+            RegistryEntry<ArmorMaterial> theArmorMaterial = ArmorMaterials.finalArmorMaterials.get(i);
             for(int j = 0; j < 4; j++) {
                 if (j == 0) {
                     String itemName = names.get(i) + "_boots";
                     // Make and register item at the same time
                     try {
-                        Registry.register(Registries.ITEM,
+                        everyItem.add(Registry.register(Registries.ITEM,
                                 Identifier.of(nameSpace, itemName),
-                                new ArmorItem(theArmorMaterial, ArmorItem.Type.BOOTS, new Item.Settings()));
+                                new ArmorItem(theArmorMaterial, ArmorItem.Type.BOOTS, new Item.Settings())));
                     }
                     catch (NullPointerException error) {
                         System.out.println("WoodArmoritems: register: nullptr error: " + error);
@@ -90,9 +100,9 @@ public class WoodArmorItems {
                 }else if (j == 1) {
                     String itemName = names.get(i) + "_leggings";
                     try {
-                        Registry.register(Registries.ITEM,
+                        everyItem.add(Registry.register(Registries.ITEM,
                                 Identifier.of(nameSpace, itemName),
-                                new ArmorItem(theArmorMaterial, ArmorItem.Type.LEGGINGS, new Item.Settings()));
+                                new ArmorItem(theArmorMaterial, ArmorItem.Type.LEGGINGS, new Item.Settings())));
                     }
                     catch (NullPointerException error) {
                         System.out.println("WoodArmoritems: register: nullptr error: " + error);
@@ -100,9 +110,9 @@ public class WoodArmorItems {
                 }else if (j == 2) {
                     String itemName = names.get(i) + "_chestplate";
                     try {
-                        Registry.register(Registries.ITEM,
+                        everyItem.add(Registry.register(Registries.ITEM,
                                 Identifier.of(nameSpace, itemName),
-                                new ArmorItem(theArmorMaterial, ArmorItem.Type.CHESTPLATE, new Item.Settings()));
+                                new ArmorItem(theArmorMaterial, ArmorItem.Type.CHESTPLATE, new Item.Settings())));
                     }
                     catch (NullPointerException error) {
                         System.out.println("WoodArmoritems: register: nullptr error: " + error);
@@ -110,9 +120,9 @@ public class WoodArmorItems {
                 }else {
                     String itemName = names.get(i) + "_helmet";
                     try {
-                        Registry.register(Registries.ITEM,
+                        everyItem.add(Registry.register(Registries.ITEM,
                               Identifier.of(nameSpace, itemName),
-                              new ArmorItem(theArmorMaterial, ArmorItem.Type.HELMET, new Item.Settings()));
+                              new ArmorItem(theArmorMaterial, ArmorItem.Type.HELMET, new Item.Settings())));
                     }
                     catch (NullPointerException error) {
                         System.out.println("WoodArmoritems: register: nullptr error: " + error);
@@ -120,30 +130,55 @@ public class WoodArmorItems {
                 }
             }
         }
+        RegistryKey<ItemGroup> CUSTOM_ITEM_GROUP_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(), Identifier.of("callawnsbasic", "item_group"));
+        ItemGroup ARMOR_GROUP = FabricItemGroup.builder()
+                .icon(() -> new ItemStack(Items.DIAMOND))
+                .displayName(Text.translatable("itemGroup.callawnsarmor"))
+                .entries((context, entries) -> {
+                    for (Item item : everyItem) {
+                        entries.add(item);
+                    }
+                })
+                .build();
+        Registry.register(Registries.ITEM_GROUP, CUSTOM_ITEM_GROUP_KEY, ARMOR_GROUP);
+    }
+    public static void generateJSONFiles() {
+        String path_template = "..\\src\\main\\resources\\assets\\callawnsbasic\\models\\item\\";
+        // loop through every item: check if corresponding json file exists if not create one
+        for(Item item : everyItem) {
+            // Starting on the 36 index, grab character until it hits an '
+            StringBuilder file_name = new StringBuilder();
+            String item_name = item.getName().toString();
+            for(int j = 0; j < item_name.length(); j++) {
+                if (j >= 36 && item_name.charAt(j) == '\'') {
+                    break;
+                }
+                if (j >= 36) {
+                    file_name.append(item_name.charAt(j));
+                }
+            }
+            Path file_path = Paths.get(path_template + file_name + ".json");
+            if (!Files.exists(file_path)) {
+                // Add the json file to the directory
+                String json = "{\n\"parent\": \"item/generated\",\n\"textures\":{\n\"layer0\": \"callawnsbasic:item/"+file_name+"\"\n}\n}";
+                try {
+                    Files.write(file_path, json.getBytes());
+                } catch (IOException error) {
+                    System.out.println("Failed to add texture json file " + file_name);
+                }
+                System.out.println("We added a file " + file_name);
+            }
+
+        }
     }
 
-    public static void generateItems(String materials, String armorItems)
+    public static void generateItems(InputStream materials, InputStream armorItems)
     {
-        WoodArmorMaterials.getMaterials(materials);
-        WoodArmorMaterials.register_all_materials();
+        ArmorMaterials.getMaterials(materials);
+        ArmorMaterials.register_all_materials();
 
         getArmorItems(armorItems);
         register();
+        generateJSONFiles();
     }
-
-//    // Generate group location for all items
-//    public static final ItemGroup WOOD_ARMOR_GROUP = FabricItemGroup.builder()
-//            .icon(() -> new ItemStack(OAK_BOOTS))
-//            .displayName(Text.translatable("Callawn's Wood Armor"))
-//            .entries((context, entries) -> {
-//                entries.add(OAK_BOOTS);
-//            })
-//            .build();
-//
-//    public static void registerItems() {
-//        // register item group for all items to exist in
-//        Registry.register(Registries.ITEM_GROUP, Identifier.of("callawnsbasic", "wood_armor_group"), WOOD_ARMOR_GROUP);
-//
-//    }
-
 }

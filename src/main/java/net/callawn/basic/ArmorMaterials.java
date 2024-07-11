@@ -1,7 +1,6 @@
 package net.callawn.basic;
 
 import java.io.*;
-
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
@@ -14,13 +13,11 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.Util;
-
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Supplier;
 
 
-public class WoodArmorMaterials {
+public class ArmorMaterials {
     // Create the Armor Material with its parameters
     static ArrayList<String> materials = new ArrayList<>();
     static ArrayList<Integer> armor = new ArrayList<>();
@@ -30,13 +27,12 @@ public class WoodArmorMaterials {
     static ArrayList<Float> knock_back = new ArrayList<>();
     static ArrayList<String> ingredient = new ArrayList<>();
     static ArrayList<String> namespace = new ArrayList<>();
-
     static ArrayList<RegistryEntry<ArmorMaterial>> finalArmorMaterials = new ArrayList<>();
 
-    public static void getMaterials(String path) {
+    public static void getMaterials(InputStream path) {
         // Get and register materials from csv
         try {
-            BufferedReader file = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8));
+            BufferedReader file = new BufferedReader(new InputStreamReader(path));
             String line;
             int line_counter = 0;
             while ((line = file.readLine()) != null) {
@@ -121,6 +117,7 @@ public class WoodArmorMaterials {
             file.close();
         } catch (IOException error) {
             System.out.println("File reader error ARMORMATERIALS.CSV, " + error);
+            System.out.println(System.getProperty("user.dir"));
         }
     }
     public static void register_all_materials()
@@ -155,9 +152,9 @@ public class WoodArmorMaterials {
                 finalArmorMaterials.add(register_material(id, armorMap, enchant, equip, tough, knock, repairIngredient,
                         List.of(new ArmorMaterial.Layer(Identifier.of(name_space, id)))));
             }
-            finally
+            catch (Exception error)
             {
-                System.out.println("Successful registration");
+                System.out.println("Armor Material Registration: " + error);
             }
         }
     }
@@ -189,11 +186,9 @@ public class WoodArmorMaterials {
             List<ArmorMaterial.Layer> layers
     ) {
         EnumMap<ArmorItem.Type, Integer> enumMap = new EnumMap<>(ArmorItem.Type.class);
-
         for (ArmorItem.Type type : ArmorItem.Type.values()) {
             enumMap.put(type, defense.get(type));
         }
-
         return Registry.registerReference(
                 Registries.ARMOR_MATERIAL,
                 Identifier.ofVanilla(id),

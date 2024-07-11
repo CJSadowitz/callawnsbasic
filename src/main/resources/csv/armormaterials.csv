@@ -1,0 +1,13 @@
+name, boots, leggings, chestplate, helmet, body, enchantability, sound, toughness, knock back resistance, ingredient, namespace
+oak_material,      1, 1, 1, 1, 1, 15, asdf, 0, 0, stripped_oak_wood, callawnsbasic
+spruce_material,   1, 1, 1, 1, 1, 15, asdf, 0, 0, stripped_spruce_wood, callawnsbasic
+birch_material,    1, 1, 1, 1, 1, 15, asdf, 0, 0, stripped_birch_wood, callawnsbasic
+jungle_material,   1, 1, 1, 1, 1, 15, asdf, 0, 0, stripped_jungle_wood, callawnsbasic
+acacia_material,   1, 1, 1, 1, 1, 15, asdf, 0, 0, stripped_acacia_wood, callawnsbasic
+bamboo_material,   1, 1, 1, 1, 1, 15, asdf, 0, 0, stripped_bamboo_block, callawnsbasic
+dark_oak_material, 1, 1, 1, 1, 1, 15, asdf, 0, 0, stripped_dark_oak_wood, callawnsbasic
+mangrove_material, 1, 1, 1, 1, 1, 15, asdf, 0, 0, stripped_mangrove_wood, callawnsbasic
+cherry_material,   1, 1, 1, 1, 1, 15, asdf, 0, 0, stripped_cherry_wood, callawnsbasic
+crimson_material,  1, 1, 1, 1, 1, 15, asdf, 0, 0, stripped_crimson_stem, callawnsbasic
+warped_material,   1, 1, 1, 1, 1, 15, asdf, 0, 0, stripped_warped_stem, callawnsbasic
+chorus_material,   1, 1, 1, 1, 1, 15, asdf, 0, 0, chorus_fruit, callawnsbasic

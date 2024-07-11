@@ -4,10 +4,10 @@ spruce, callawnsbasic, spruce_material,Callawn's Wood Armor, stripped_spruce_log
 birch, callawnsbasic, birch_material,Callawn's Wood Armor, stripped_birch_log
 jungle, callawnsbasic, jungle_material,Callawn's Wood Armor, stripped_jungle_log
 acacia, callawnsbasic, acacia_material,Callawn's Wood Armor, stripped_acacia_log
-bamboo, callawnsbasic, bamboo_material,Callawn's Wood Armor, stripped_bamboo_log
+bamboo, callawnsbasic, bamboo_material,Callawn's Wood Armor, stripped_bamboo_block
 dark_oak, callawnsbasic, dark_oak_material,Callawn's Wood Armor, stripped_dark_oak_log
 mangrove, callawnsbasic, mangrove_material,Callawn's Wood Armor, stripped_mangrove_log
 cherry, callawnsbasic, cherry_material,Callawn's Wood Armor, stripped_cherry_log
-crimson, callawnsbasic, crimson_material,Callawn's Wood Armor, stripped_crimson_log
-warped, callawnsbasic, warped_material,Callawn's Wood Armor, stripped_warped_log
-chorus, callawnsbasic, chorus_material,Callawn's Wood Armor, stripped_chorus_log
+crimson, callawnsbasic, crimson_material,Callawn's Wood Armor, stripped_crimson_stem
+warped, callawnsbasic, warped_material,Callawn's Wood Armor, stripped_warped_stem
+chorus, callawnsbasic, chorus_material,Callawn's Wood Armor, chorus_fruit

@@ -1,11 +1,25 @@
 {
-	"required": true,
-	"package": "net.callawn.basic.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-		"ExampleMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
+  "required": true,
+  "package": "net.callawn.basic.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BedResetTimeMixin",
+    "CreeperBuff",
+    "CreeperEntityInvoker",
+    "CreeperRangeBuff",
+    "IncreaseMobDifficulty",
+    "LivingEntityAccessors",
+    "MobBuffs",
+    "MobTargets",
+    "MonsterSpawnChanges",
+    "PhantomEntityAccessor",
+    "PhantomMoveControlMixin",
+    "RemoveVillages",
+    "SpiderBuff",
+    "SpiderPotionEffects",
+    "ZombieBuff"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }
