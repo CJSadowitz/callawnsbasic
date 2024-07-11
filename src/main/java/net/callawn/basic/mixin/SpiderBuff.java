@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(targets="net/minecraft/entity/mob/SpiderEntity")
+@Mixin(value=SpiderEntity.class)
 public class SpiderBuff {
 
     @Inject(method="initialize", at=@At("RETURN"), cancellable = true)
@@ -34,6 +34,23 @@ public class SpiderBuff {
                 skeletonEntity.refreshPositionAndAngles(spider.getX(), spider.getY(), spider.getZ(), spider.getYaw(), 0.0F);
                 skeletonEntity.initialize(world, difficulty, spawnReason, null);
                 skeletonEntity.startRiding(spider);
+            }
+        }
+        else if (difficulty.getLocalDifficulty() >= 15) {
+            SkeletonEntity skeletonEntity = EntityType.SKELETON.create(spider.getWorld());
+            if (skeletonEntity != null) {
+                skeletonEntity.refreshPositionAndAngles(spider.getX(), spider.getY(), spider.getZ(), spider.getYaw(), 0.0F);
+                skeletonEntity.initialize(world, difficulty, spawnReason, null);
+                skeletonEntity.startRiding(spider);
+            }
+        }
+        entityData = new SpiderEntity.SpiderData();
+        Random random = world.getRandom();
+        ((SpiderEntity.SpiderData)entityData).setEffect(random);
+        if (entityData instanceof SpiderEntity.SpiderData spiderData) {
+            RegistryEntry<StatusEffect> registryEntry = spiderData.effect;
+            if (registryEntry != null) {
+                spider.addStatusEffect(new StatusEffectInstance(registryEntry, -1));
             }
         }
         cir.setReturnValue(entityData);

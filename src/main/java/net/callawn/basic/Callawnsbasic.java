@@ -10,7 +10,7 @@ public class Callawnsbasic implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		// fix paths
-		WoodArmorItems.generateItems("..\\src\\main\\java\\net\\callawn\\basic\\armormaterials.csv",
+		ArmorItems.generateItems("..\\src\\main\\java\\net\\callawn\\basic\\armormaterials.csv",
 				"..\\src\\main\\java\\net\\callawn\\basic\\armoritems.csv");
 		// Remove the placement of anvil
 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {

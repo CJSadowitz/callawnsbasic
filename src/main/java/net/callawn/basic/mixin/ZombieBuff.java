@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(targets="net/minecraft/entity/mob/ZombieEntity")
+@Mixin(value=ZombieEntity.class)
 public class ZombieBuff {
 
     @Inject(method="createZombieAttributes", at=@At("RETURN"), remap = false, cancellable = true)

@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 
-public class WoodArmorMaterials {
+public class ArmorMaterials {
     // Create the Armor Material with its parameters
     static ArrayList<String> materials = new ArrayList<>();
     static ArrayList<Integer> armor = new ArrayList<>();

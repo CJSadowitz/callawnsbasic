@@ -1,13 +1,10 @@
 package net.callawn.basic.mixin;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.*;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.structure.*;
-import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.gen.structure.OceanMonumentStructure;
@@ -16,16 +13,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import java.util.List;
-
 import static com.mojang.text2speech.Narrator.LOGGER;
-import static net.minecraft.structure.pool.StructurePools.ofVanilla;
 
-
-@Mixin(targets="net/minecraft/structure/StructureStart")
+@Mixin(value=StructureStart.class)
 public class RemoveVillages {
 
     @Shadow public static final StructureStart DEFAULT = new StructureStart(null, new ChunkPos(0, 0), 0, new StructurePiecesList(List.of()));

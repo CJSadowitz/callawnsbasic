@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class WoodArmorItems {
+public class ArmorItems {
 
     static ArrayList<String> names = new ArrayList<>();
     static ArrayList<String> nameSpaces = new ArrayList<>();
@@ -75,7 +75,7 @@ public class WoodArmorItems {
         // Always be an item. Need to register four items per name: boots, chestplate, helmet, leggings
         for (int i = 0; i < names.size(); i++) {
             String nameSpace = nameSpaces.get(i);
-            RegistryEntry<ArmorMaterial> theArmorMaterial = WoodArmorMaterials.finalArmorMaterials.get(i);
+            RegistryEntry<ArmorMaterial> theArmorMaterial = ArmorMaterials.finalArmorMaterials.get(i);
             for(int j = 0; j < 4; j++) {
                 if (j == 0) {
                     String itemName = names.get(i) + "_boots";
@@ -125,8 +125,8 @@ public class WoodArmorItems {
 
     public static void generateItems(String materials, String armorItems)
     {
-        WoodArmorMaterials.getMaterials(materials);
-        WoodArmorMaterials.register_all_materials();
+        ArmorMaterials.getMaterials(materials);
+        ArmorMaterials.register_all_materials();
 
         getArmorItems(armorItems);
         register();

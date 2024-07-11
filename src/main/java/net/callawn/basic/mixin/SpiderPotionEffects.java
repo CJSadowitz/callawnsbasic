@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(targets="net/minecraft/entity/mob/SpiderEntity$SpiderData")
+@Mixin(value=SpiderEntity.SpiderData.class)
 public class SpiderPotionEffects {
     @Inject(method="setEffect", at=@At("TAIL"))
     public void potioneffects(Random random, CallbackInfo ci) {

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.minecraft.entity.mob.MobEntity.getEquipmentForSlot;
 
-@Mixin(targets="net/minecraft/entity/mob/MobEntity")
+@Mixin(value=MobEntity.class)
 public abstract class MobBuffs {
 
     @Inject(method="initEquipment", at=@At("TAIL"))
@@ -28,9 +28,29 @@ public abstract class MobBuffs {
                 if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
                     ItemStack itemStack = mob_entity.getEquippedStack(equipmentSlot);
                     if (itemStack.isEmpty()) {
-                        Item item = getEquipmentForSlot(equipmentSlot, 4);
-                        if (item != null) {
-                            mob_entity.equipStack(equipmentSlot, new ItemStack(item));
+                        if (localDifficulty.getLocalDifficulty() >= 5) {
+                            Item item = getEquipmentForSlot(equipmentSlot, 2);
+                            if (item != null) {
+                                mob_entity.equipStack(equipmentSlot, new ItemStack(item));
+                            }
+                        }
+                        else if (localDifficulty.getLocalDifficulty() >= 10) {
+                            Item item = getEquipmentForSlot(equipmentSlot, 3);
+                            if (item != null) {
+                                mob_entity.equipStack(equipmentSlot, new ItemStack(item));
+                            }
+                        }
+                        else if (localDifficulty.getLocalDifficulty() >= 20) {
+                            Item item = getEquipmentForSlot(equipmentSlot, 4);
+                            if (item != null) {
+                                mob_entity.equipStack(equipmentSlot, new ItemStack(item));
+                            }
+                        }
+                        else {
+                            Item item = getEquipmentForSlot(equipmentSlot, 1);
+                            if (item != null) {
+                                mob_entity.equipStack(equipmentSlot, new ItemStack(item));
+                            }
                         }
                     }
                 }
@@ -39,7 +59,7 @@ public abstract class MobBuffs {
     }
     @Inject(method="getLimitPerChunk", at=@At("RETURN"), cancellable = true)
     public void increase_spawns_per_chunk(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(20);
+        cir.setReturnValue(10);
     }
     @Inject(method="canBeLeashed", at=@At("RETURN"), cancellable = true)
     public void all_mobs_leashed(CallbackInfoReturnable<Boolean> cir) {
