@@ -5,18 +5,16 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class ModItems {
     static ArrayList<String> names = new ArrayList<>();
     static ArrayList<String> nameSpaces = new ArrayList<>();
 
-    public static void getItems(String path) {
+    public static void getItems(InputStream path) {
         try {
-            BufferedReader file = new BufferedReader(new FileReader(path));
+            BufferedReader file = new BufferedReader(new InputStreamReader(path));
             String line;
             int line_counter = 0;
             while((line = file.readLine()) != null) {
@@ -53,7 +51,7 @@ public class ModItems {
         }
     }
 
-    public static void generateItems(String path) {
+    public static void generateItems(InputStream path) {
         getItems(path);
         register();
     }

@@ -14,9 +14,10 @@ public class Callawnsbasic implements ModInitializer {
 		// fix paths
 		InputStream materials = getClass().getClassLoader().getResourceAsStream("csv/armormaterials.csv");
 		InputStream armor_items = getClass().getClassLoader().getResourceAsStream("csv/armoritems.csv");
-		ArmorItems.generateItems(materials, armor_items);
+		InputStream mod_items = getClass().getClassLoader().getResourceAsStream("csv/items.csv");
 
-		// ModItems.generateItems("..\\src\\main\\resources\\csv\\items.csv");
+		ArmorItems.generateItems(materials, armor_items);
+		ModItems.generateItems(mod_items);
 
 
 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
